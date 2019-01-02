@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="871.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ims.Controllers.MainScreen">
+    <stylesheets>
+        <URL value="@common.css" />
+    </stylesheets>
+   <children>
+      <Label layoutX="14.0" layoutY="14.0" text="Inventory Management System">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Pane layoutX="14.0" layoutY="51.0" prefHeight="300.0" prefWidth="420.0">
+         <children>
+            <Label layoutX="14.0" layoutY="14.0" text="Parts">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Button layoutX="158.0" layoutY="12.0" mnemonicParsing="false" onAction="#searchPartsButtonPressed" text="Search" />
+            <TextField layoutX="213.0" layoutY="12.0" prefHeight="25.0" prefWidth="193.0" />
+            <TableView layoutX="15.0" layoutY="44.0" prefHeight="200.0" prefWidth="390.0">
+              <columns>
+                <TableColumn fx:id="colPartID" editable="false" prefWidth="75.0" text="Part ID" />
+                <TableColumn fx:id="colPartName" editable="false" prefWidth="75.0" text="Part Name" />
+                  <TableColumn fx:id="colPartInventory" editable="false" prefWidth="106.0" text="Inventory Level" />
+                  <TableColumn fx:id="colPartPrice" editable="false" minWidth="9.0" prefWidth="133.0" text="Price/Cost per Unit" />
+              </columns>
+            </TableView>
+            <Button layoutX="353.0" layoutY="253.0" mnemonicParsing="false" onAction="#deletePartButtonPressed" text="Delete" />
+            <Button layoutX="293.0" layoutY="253.0" mnemonicParsing="false" onAction="#modifyPartButtonPressed" text="Modify" />
+            <Button layoutX="234.0" layoutY="253.0" mnemonicParsing="false" onAction="#addPartButtonPressed" text="Add" />
+         </children>
+      </Pane>
+      <Pane layoutX="434.0" layoutY="51.0" prefHeight="300.0" prefWidth="420.0">
+         <children>
+            <Label layoutX="14.0" layoutY="14.0" text="Products">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Button layoutX="158.0" layoutY="12.0" mnemonicParsing="false" onAction="#searchProductsButtonPressed" text="Search" />
+            <TextField layoutX="213.0" layoutY="12.0" prefHeight="25.0" prefWidth="193.0" />
+            <TableView layoutX="15.0" layoutY="44.0" prefHeight="200.0" prefWidth="390.0">
+               <columns>
+                  <TableColumn editable="false" prefWidth="75.0" text="Part ID" />
+                  <TableColumn editable="false" prefWidth="75.0" text="Part Name" />
+                  <TableColumn editable="false" prefWidth="106.0" text="Inventory Level" />
+                  <TableColumn editable="false" minWidth="9.0" prefWidth="133.0" text="Price/Cost per Unit" />
+               </columns>
+            </TableView>
+            <Button layoutX="353.0" layoutY="253.0" mnemonicParsing="false" onAction="#deleteProductButtonPressed" text="Delete" />
+            <Button layoutX="293.0" layoutY="253.0" mnemonicParsing="false" onAction="#modifyProductButtonPressed" text="Modify" />
+            <Button layoutX="234.0" layoutY="253.0" mnemonicParsing="false" onAction="#addProductButtonPressed" text="Add" />
+         </children>
+      </Pane>
+      <Button layoutX="756.0" layoutY="351.0" mnemonicParsing="false" onAction="#exitButtonPressed" prefHeight="38.0" prefWidth="85.0" stylesheets="@../common.css" text="Exit">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
