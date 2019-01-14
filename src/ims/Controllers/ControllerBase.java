@@ -5,7 +5,7 @@
  */
 package ims.Controllers;
 
-import ims.Models.Inventory;
+import ims.Data.Inventory;
 
 /**
  *
@@ -13,9 +13,7 @@ import ims.Models.Inventory;
  */
 public abstract class ControllerBase {
     
-    protected Inventory Inventory;
+    protected Inventory _inventory;
     
-    public void setInventory(Inventory value){
-        Inventory = value;
-    }
+    public abstract void setInventory(Inventory value);
 }

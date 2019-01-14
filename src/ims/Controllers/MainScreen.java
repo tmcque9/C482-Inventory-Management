@@ -5,6 +5,7 @@
  */
 package ims.Controllers;
 
+import ims.Data.Inventory;
 import ims.MainApp;
 import ims.Window;
 import ims.WindowFactory;
@@ -15,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 
@@ -29,19 +31,22 @@ public class MainScreen extends ControllerBase {
     @FXML private TableColumn colPartInventory;
     @FXML private TableColumn colPartPrice;
     
+    @FXML private TableView<Part> partsTable;
+    
     public void initialize()
     {
         colPartID.setCellValueFactory(new PropertyValueFactory<Part, String>("PartID"));
         colPartName.setCellValueFactory(new PropertyValueFactory<Part, String>("Name"));
         colPartInventory.setCellValueFactory(new PropertyValueFactory<Part, Integer>("InStock"));
         colPartPrice.setCellValueFactory(new PropertyValueFactory<Part, Double>("Price"));
+        
     }
     
     
     
     @FXML public void exitButtonPressed(ActionEvent event) throws IOException
     {
-//        this.inventory.Save("inventory.xml");
+        _inventory.Save();
         Platform.exit();
         System.exit(0);
     }
@@ -53,16 +58,30 @@ public class MainScreen extends ControllerBase {
         AddPart controller = (AddPart) addPartWindow.getController();
         addPartWindow.ShowAndWait();
         Part part = controller.getPart();
-        Inventory.addPart(part);
+        _inventory.addPart(part);
     }
     
-    @FXML public void modifyPartButtonPressed(ActionEvent event)
+    @FXML public void modifyPartButtonPressed(ActionEvent event) throws IOException
     {
+        Window addPartWindow = WindowFactory.CreateWindow(MainApp.addPartUrl);
+        AddPart controller = (AddPart) addPartWindow.getController();
+        Part part = partsTable.getSelectionModel().getSelectedItem();
         
+        if (part != null)
+        {
+            controller.UpdatePart(part);
+            addPartWindow.ShowAndWait();
+        }
     }
     
     @FXML public void deletePartButtonPressed(ActionEvent event)
     {
+        Part part = partsTable.getSelectionModel().getSelectedItem();
+        
+        if (part != null)
+        {
+            _inventory.deletePart(part);
+        }
         
     }
     
@@ -95,4 +114,12 @@ public class MainScreen extends ControllerBase {
     {
         
     }
+
+    @Override
+    public void setInventory(Inventory value)
+    {
+        _inventory = value;
+        partsTable.setItems(_inventory.GetPartsList());
+    }
+
 }

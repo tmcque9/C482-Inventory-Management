@@ -5,7 +5,7 @@
  */
 package ims;
 
-import ims.Models.Inventory;
+import ims.Data.Inventory;
 import java.io.IOException;
 import java.net.URL;
 import javafx.application.Application;

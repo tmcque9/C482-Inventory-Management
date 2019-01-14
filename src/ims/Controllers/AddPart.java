@@ -5,6 +5,7 @@
  */
 package ims.Controllers;
 
+import ims.Data.Inventory;
 import ims.Models.Part;
 import ims.Models.InhousePart;
 import ims.Models.OutsourcedPart;
@@ -12,6 +13,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -57,6 +60,7 @@ public class AddPart extends ControllerBase {
     @FXML private TextField partMin;
     @FXML private TextField partSpecificValue;
     @FXML private Label partSpecificValueLabel;
+    @FXML private Label functionLabel;
     
     @FXML private Button btnSave;
     
@@ -123,5 +127,24 @@ public class AddPart extends ControllerBase {
             }
             
         });
+    }
+
+    @Override
+    public void setInventory(Inventory value)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public void UpdatePart(Part part)
+    {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run()
+            {
+                functionLabel.setText("Modify Part");
+                _part = part;
+                Logger.getLogger(AddPart.class.getName()).log(Level.INFO, "Class: {0}", part.getClass());
+            }
+        });   
     }
 }

@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ims.Models;
+package ims.Data;
 
 import ims.Controllers.MainScreen;
+import ims.Models.Part;
+import ims.Models.Product;
 import java.beans.ExceptionListener;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -21,6 +23,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.scene.control.Alert;
 import javafx.stage.Modality;
 
@@ -33,6 +36,8 @@ import javafx.stage.Modality;
 public class Inventory 
 {
     
+    private final String _dataFileName;
+        
     private ObservableList<Product> productList = FXCollections.observableArrayList(
         product -> new Observable[] {
             product.ProductId(),
@@ -64,11 +69,58 @@ public class Inventory
     
     public ObjectProperty<Part> CurrentPart () { return this.currentPart; }
     
+    public ObservableList<Part> GetPartsList () { return this.partsList; }
+    
+    
+    public Inventory(String dataFileName)
+    {
+        _dataFileName = dataFileName;
+        SetListeners();
+    }
+    
     /**
      *
      */
-    public Inventory() 
+    public Inventory(InventoryData data, String dataFileName) 
     {
+        _dataFileName = dataFileName;
+        
+        productList.addAll(data.Products);
+        partsList.addAll(data.Parts);
+        
+        SetListeners();
+    }
+
+    private void SetListeners()
+    {
+        partsList.addListener(new ListChangeListener<Part>(){
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends Part> c)
+            {
+                while (c.next()){
+                    if (c.wasPermutated()) {
+                        for (int i = c.getFrom(); i < c.getTo(); ++i) {
+                            Logger.getLogger(MainScreen.class.getName()).log(Level.INFO, "Permuted: {0} {1}", new Object[] {i, partsList.get(i)});
+                        }
+                    }
+                    else if (c.wasUpdated()) {
+                        for (int i = c.getFrom(); i < c.getTo(); ++i) {
+                            Logger.getLogger(MainScreen.class.getName()).log(Level.INFO, "Updated: {0} {1}", new Object[] {i, partsList.get(i)});
+                        }
+                    }
+                    else {
+                        for (Part removedItem : c.getRemoved()) {
+                            Logger.getLogger(MainScreen.class.getName()).log(Level.INFO, "Removed: {0}", removedItem);
+                        }
+                        
+                        for (Part addedItem : c.getAddedSubList()) {
+                            Logger.getLogger(MainScreen.class.getName()).log(Level.INFO, "Added: {0}", addedItem);
+                        }
+                    }
+                }
+            }   
+            
+        });
     }
     
     /**
@@ -116,7 +168,9 @@ public class Inventory
      */
     public void addPart(Part part)
     {
+        Logger.getLogger(Inventory.class.getName()).log(Level.INFO, "adding part '{0}' to database", part.getName());
         this.partsList.add(part);
+        
     }
     
     /**
@@ -153,7 +207,8 @@ public class Inventory
         File f = new File(fileName);
         if (!f.exists())
         {
-            return new Inventory();
+            Logger.getLogger(Inventory.class.getName()).log(Level.INFO, "no data file found, newing up an empty object");
+            return new Inventory(fileName);
         }
         
         FileInputStream inputStream = new FileInputStream(fileName);
@@ -161,7 +216,7 @@ public class Inventory
         
         decoder.setExceptionListener(new ExceptionListener() {
             public void exceptionThrown(Exception e) {
-                Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, "Somethig went wrong... {0}", e.getMessage());
+                Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, "Somethig went wrong... {0}", e.getMessage());
 //                Alert alert = new Alert(Alert.AlertType.INFORMATION);
 //                alert.initModality(Modality.NONE);
 //                alert.setTitle("File Load Exception");
@@ -171,20 +226,22 @@ public class Inventory
             }
         
         });
-        Inventory inventory = (Inventory) decoder.readObject();
+//        Inventory inventory = (Inventory) decoder.readObject();
+        InventoryData data = (InventoryData) decoder.readObject();
         Logger.getLogger(MainScreen.class.getName()).log(Level.INFO, "Inventory loaded");
         decoder.close();
         inputStream.close();
-        return inventory;
+        
+        return new Inventory(data, fileName);
     }
     
-    public void Save(String fileName) throws IOException
+    public void Save() throws IOException
     {
-        FileOutputStream outputStream = new FileOutputStream(fileName);
+        FileOutputStream outputStream = new FileOutputStream(_dataFileName);
         XMLEncoder encoder = new XMLEncoder(outputStream);
         encoder.setExceptionListener(new ExceptionListener() {
             public void exceptionThrown(Exception e) {
-                Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, "Somethig went wrong... {0}", e.getMessage());
+                Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, "Somethig went wrong... {0}", e.getMessage());
 //                Alert alert = new Alert(Alert.AlertType.INFORMATION);
 //                alert.initModality(Modality.NONE);
 //                alert.setTitle("File Save Exception");
@@ -195,10 +252,14 @@ public class Inventory
         
         });
         
-        encoder.writeObject(this);
+        InventoryData data = new InventoryData();
+        data.Products.addAll(productList);
+        data.Parts.addAll(partsList);
+        
+        encoder.writeObject(data);
         
         
-        Logger.getLogger(MainScreen.class.getName()).log(Level.INFO, "Inventory successfully saved");
+        Logger.getLogger(Inventory.class.getName()).log(Level.INFO, "Inventory successfully saved");
         encoder.close();
         outputStream.close();
     }

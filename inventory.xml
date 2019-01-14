@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_192" class="java.beans.XMLDecoder">
+ <object class="ims.Data.InventoryData" id="InventoryData0"/>
+<void class="ims.Models.OutsourcedPart" id="OutsourcedPart0">
+ <void property="max">
+  <int>1</int>
+ </void>
+ <void property="min">
+  <int>1</int>
+ </void>
+ <void property="name">
+  <string>test2</string>
+ </void>
+ <void property="partID">
+  <int>896725</int>
+ </void>
+ <void property="price">
+  <double>1.0</double>
+ </void>
+ <void property="inStock">
+  <int>1</int>
+ </void>
+</void>
+<void class="ims.Models.InhousePart" id="InhousePart0">
+ <void property="machineID">
+  <int>1</int>
+ </void>
+ <void property="max">
+  <int>1</int>
+ </void>
+ <void property="min">
+  <int>1</int>
+ </void>
+ <void property="name">
+  <string>test</string>
+ </void>
+ <void property="partID">
+  <int>440999</int>
+ </void>
+ <void property="price">
+  <double>1.0</double>
+ </void>
+ <void property="inStock">
+  <int>1</int>
+ </void>
+</void>
+<void class="ims.Data.InventoryData" id="Field0" method="getField">
+ <string>Parts</string>
+ <void id="ArrayList0" method="get">
+  <object idref="InventoryData0"/>
+  <void method="add">
+   <object idref="OutsourcedPart0"/>
+  </void>
+  <void method="add">
+   <object idref="InhousePart0"/>
+  </void>
+ </void>
+</void>
+<void idref="ArrayList0"/>
+</java>
